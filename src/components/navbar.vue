@@ -44,9 +44,9 @@ export default {
     props: ['title'],
     data() {
         return {
-            showNav: false,
+            showNav: false
         }
-    },
+    }
 }
 </script>
 
