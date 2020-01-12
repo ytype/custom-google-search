@@ -20,7 +20,9 @@ module.exports = {
         semi: [2, 'never'],
         'no-unused-vars': 'off',
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-        'comma-dangle': ['error', 'never']
+        'comma-dangle': ['error', 'never'],
+        "allowForLoopAfterthoughts": true,
+        'no-plusplus': [2, { allowForLoopAfterthoughts: true }]
     },
     parserOptions: {
         parser: 'babel-eslint',
