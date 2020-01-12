@@ -29,22 +29,6 @@ export default {
             out: {}
         }
     },
-    computed: {
-        // eslint-disable-next-line vue/return-in-computed-property
-        /* eslint-disable object-shorthand */
-        /* eslint-disable func-names */
-        // eslint-disable-next-line vue/return-in-computed-property
-        autocomplete: function () {
-            // eslint-disable-next-line vue/no-async-in-computed-properties
-            axios.get(`search?client=hp&hl=en&sugexp=msedr&gs_rn=62&gs_ri=hp&cp=1&gs_id=9c&q=${this.query}&xhr=t`)
-                .then((response) => {
-                    console.log(response.data[1])
-                    return response.data[1]
-                })
-                .catch(error => error)
-            return 'hello'
-        }
-    },
     asyncComputed: {
         async customer() {
             const res = await this.axios.get(`search?client=hp&hl=en&sugexp=msedr&gs_rn=62&gs_ri=hp&cp=1&gs_id=9c&q=${this.query}&xhr=t`)
