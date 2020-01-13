@@ -4,14 +4,15 @@
       <img src="~@/assets/google-logo.png">
     </div>
     <div class="search-box">
-      <input type="text" name="" class="serach-txt" placeholder="Search" v-model="query" />
+      <input type="text" name="" class="serach-txt" placeholder="Search"
+      v-model="query" @keyup.enter="goto" />
       <a class="serach-btn">
         <i class="fas fa-circle-notch"></i>
       </a>
     </div>
 
     <div class="result-box" v-if="data">
-      <li class="result-txt" v-for="i in columns" :key=i.id>{{ data[i-1][0] }}</li>
+      <li class="result-txt" v-for="i in columns" :key=i.id><a :href="'http://www.google.com/search?q='+data[i-1][0]">{{ data[i-1][0] }}</a></li>
     </div>
 
   </div>
@@ -41,6 +42,9 @@ export default {
         handleResize() {
             this.window.width = window.innerWidth
             this.window.height = window.innerHeight
+        },
+        goto() {
+            window.location.href = `http://www.google.com/search?q=${this.query}`
         }
     },
     computed: {
@@ -72,6 +76,10 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: 'NanumSquare', sans-serif;
+  src: url("~@/assets/fonts/NanumSquareR.woff") format("woff");
+}
   body {
     margin: 0;
     padding: 0;
@@ -80,8 +88,12 @@ export default {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    font-family: 'NanumSquare', sans-serif;
   }
-
+  a {
+    text-decoration: none;
+    color: white;
+  }
   .search-box {
     position: absolute;
     display: block;
@@ -134,6 +146,7 @@ export default {
     line-height: 40px;
     width: 0px;
     font-weight: bold;
+    font-family: 'NanumSquare', sans-serif;
   }
 
   .result-box {
