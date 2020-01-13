@@ -1,16 +1,17 @@
 <template>
   <div>
+    <div class="header">
+      <a href="https://github.com/ytype/custom-google-search"><img class="github-logo" src="~@/assets/github-logo.png"></a>
+    </div>
     <div class="title-box">
       <img src="~@/assets/google-logo.png">
     </div>
     <div class="search-box">
-      <input type="text" name="" class="serach-txt" placeholder="Search"
-      v-model="query" @keyup.enter="goto" />
+      <input type="text" name="" class="serach-txt" placeholder="Search" v-model="query" @keyup.enter="goto" />
       <a class="serach-btn">
         <i class="fas fa-circle-notch"></i>
       </a>
     </div>
-
     <div class="result-box" v-if="data">
       <li class="result-txt" v-for="i in columns" :key=i.id><a :href="'http://www.google.com/search?q='+data[i-1][0]">{{ data[i-1][0] }}</a></li>
     </div>
@@ -20,6 +21,8 @@
 
 <script>
 import axios from 'axios'
+// import jsonpAdapter from 'axios-jsonp'
+// import jsonp from 'jsonp'
 
 export default {
     data() {
@@ -52,20 +55,33 @@ export default {
             if (this.window.width > 1281) { return 10 }
             if (this.window.width > 768) { return 6 }
             return 3
-        },
-        filterData() {
-            return this.data.slice(0, this.columns)
         }
     },
     asyncComputed: {
+        // eslint-disable-next-line consistent-return
         async data() {
             try {
-                const res = await this.axios.get(`search?client=hp&hl=en&sugexp=msedr&gs_rn=62&gs_ri=hp&cp=1&gs_id=9c&q=${this.query}&xhr=t`)
+                const res = await this.$jsonp(`https://www.google.com/complete/search?client=hp&hl=en&sugexp=msedr&gs_rn=62&gs_ri=hp&cp=1&gs_id=9c&q=${this.query}&xhr=t`)
                 for (let i = 0; i < 10; i++) {
-                    res.data[1][i][0] = res.data[1][i][0].split('<b>').join('')
-                    res.data[1][i][0] = res.data[1][i][0].split('</b>').join('')
+                    res[1][i][0] = res[1][i][0].split('<b>').join('')
+                    res[1][i][0] = res[1][i][0].split('</b>').join('')
                 }
-                return res.data[1]
+                return res[1]
+                /*
+                axios({
+                    url: `https://www.google.com/complete/search?client=hp&hl=en&sugexp=msedr&gs_rn=62&gs_ri=hp&cp=1&gs_id=9c&q=${this.query}&xhr=t`,
+                    adapter: jsonpAdapter
+                }).then((res) => {
+                    for (let i = 0; i < 10; i++) {
+                        // eslint-disable-next-line no-param-reassign
+                        res.data[1][i][0] = res.data[1][i][0].split('<b>').join('')
+                        // eslint-disable-next-line no-param-reassign
+                        res.data[1][i][0] = res.data[1][i][0].split('</b>').join('')
+                    }
+                    console.log(res.data[1])
+                    return res.data[1]
+                })
+                */
             } catch {
                 return null
                 // throw new Error('empty object')
@@ -89,6 +105,18 @@ export default {
     -o-background-size: cover;
     background-size: cover;
     font-family: 'NanumSquare', sans-serif;
+  }
+  .header {
+    position: absolute;
+    width: 100%;
+    right: 0px;
+    bottom: 0px;
+  }
+  .github-logo {
+    float: right;
+    width: 60px;
+    height: auto;
+    padding: 10px;
   }
   a {
     text-decoration: none;
