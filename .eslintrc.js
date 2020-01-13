@@ -21,9 +21,9 @@ module.exports = {
         'no-unused-vars': 'off',
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
         'comma-dangle': ['error', 'never'],
-        "allowForLoopAfterthoughts": true,
+        allowForLoopAfterthoughts: true,
         'no-plusplus': [2, { allowForLoopAfterthoughts: true }],
-        "max-len": [2, 200, 4]
+        'max-len': [2, 200, 4]
     },
     parserOptions: {
         parser: 'babel-eslint',
