@@ -6,12 +6,12 @@
     <div class="search-box">
       <input type="text" name="" class="serach-txt" placeholder="Search" v-model="query" />
       <a class="serach-btn">
-        <i class="fas fa-search"></i>
+        <i class="fas fa-circle-notch"></i>
       </a>
     </div>
-    <div class="result-box">
 
-      <li class="result-txt" v-for="i in data" :key=i.id>{{ i[0] }}</li>
+    <div class="result-box" v-if="data">
+      <li class="result-txt" v-for="i in columns" :key=i.id>{{ data[i-1][0] }}</li>
     </div>
 
   </div>
@@ -23,31 +23,49 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            query: ''
+            query: '',
+            window: {
+                width: 0,
+                height: 0
+            }
         }
     },
     created() {
-        window.addEventListener(
-            'resize',
-            this.$store.commit('setWindowWidth')
-        )
+        window.addEventListener('resize', this.handleResize)
+        this.handleResize()
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize)
+    },
+    methods: {
+        handleResize() {
+            this.window.width = window.innerWidth
+            this.window.height = window.innerHeight
+        }
     },
     computed: {
-        windowWidth() {
-            return this.$store.state.windowWidth
+        columns() {
+            if (this.window.width > 1281) { return 10 }
+            if (this.window.width > 768) { return 6 }
+            return 3
+        },
+        filterData() {
+            return this.data.slice(0, this.columns)
         }
     },
     asyncComputed: {
         async data() {
-            const res = await this.axios.get(
-                `search?client=hp&hl=en&sugexp=msedr&gs_rn=62&gs_ri=hp&cp=1&gs_id=9c&q=${this.query}&xhr=t`
-            )
-
-            for (let i = 0; i < 10; i++) {
-                res.data[1][i][0] = res.data[1][i][0].split('<b>').join('')
-                res.data[1][i][0] = res.data[1][i][0].split('</b>').join('')
+            try {
+                const res = await this.axios.get(`search?client=hp&hl=en&sugexp=msedr&gs_rn=62&gs_ri=hp&cp=1&gs_id=9c&q=${this.query}&xhr=t`)
+                for (let i = 0; i < 10; i++) {
+                    res.data[1][i][0] = res.data[1][i][0].split('<b>').join('')
+                    res.data[1][i][0] = res.data[1][i][0].split('</b>').join('')
+                }
+                return res.data[1]
+            } catch {
+                return null
+                // throw new Error('empty object')
             }
-            return res.data[1]
         }
     }
 }
@@ -149,5 +167,38 @@ export default {
     width: 250px;
     height: auto;
     transform: translate(-50%, -50%);
+  }
+  @media (min-width: 320px) and (max-width: 625px) {
+    .search-box {
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #2f3640;
+    height: 2rem;
+    border-radius: 40px;
+    padding: 5px;
+  }
+  .search-box:hover>.serach-txt {
+    width: 6.4rem;
+    overflow: hidden;
+  }
+    .serach-btn>i {
+    font-size: 15px;
+  }
+    .serach-btn {
+    float: right;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: #2f3640;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s;
+    color: white;
+    cursor: pointer;
+  }
   }
 </style>
