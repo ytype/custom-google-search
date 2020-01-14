@@ -184,7 +184,7 @@ export default {
     left: 50%;
     max-height: 30%;
     width: auto !important;
-    overflow: scroll;
+    overflow: hidden;
     transform: translate(-50%, -50%);
   }
 
